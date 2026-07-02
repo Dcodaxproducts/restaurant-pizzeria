@@ -3,7 +3,25 @@
 @section('title', translate('Profile Settings'))
 
 @push('css_or_js')
+    <style>
+        #navbarSettings .nav-link {
+            color: #7E8299;
+        }
 
+        #navbarSettings .nav-link .nav-icon {
+            color: inherit;
+        }
+
+        #navbarSettings .nav-link.active {
+            background-color: #FE6524;
+            border-color: #FE6524;
+            color: #ffffff !important;
+        }
+
+        #navbarSettings .nav-link.active .nav-icon {
+            color: #ffffff !important;
+        }
+    </style>
 @endpush
 
 @section('content')
