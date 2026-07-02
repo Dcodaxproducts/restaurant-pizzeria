@@ -13,7 +13,7 @@ class CustomerLogic{
     public static function create_wallet_transaction($user_id, float $amount, $transaction_type, $referance)
     {
 
-        if(BusinessSetting::where('key','wallet_status')->first()->value != 1) return false;
+        if((BusinessSetting::where('key','wallet_status')->first()?->value ?? 0) != 1) return false;
 
         $user = User::find($user_id);
         $current_balance = $user->wallet_balance;
@@ -32,11 +32,12 @@ class CustomerLogic{
             $credit = $amount;
             if($transaction_type == 'add_fund')
             {
-                $wallet_transaction->admin_bonus = $amount * BusinessSetting::where('key','wallet_add_fund_bonus')->first()->value/100;
+                $wallet_transaction->admin_bonus = $amount * (BusinessSetting::where('key','wallet_add_fund_bonus')->first()?->value ?? 0) / 100;
             }
             else if($transaction_type == 'loyalty_point')
             {
-                $credit = (int)($amount / BusinessSetting::where('key','loyalty_point_exchange_rate')->first()->value);
+                $exchangeRate = BusinessSetting::where('key','loyalty_point_exchange_rate')->first()?->value ?? 0;
+                $credit = $exchangeRate > 0 ? (int)($amount / $exchangeRate) : 0;
             }
         }
         else if($transaction_type == 'order_place')
@@ -73,7 +74,7 @@ class CustomerLogic{
     public static function create_loyalty_point_transaction($user_id, $referance, $amount, $transaction_type)
     {
         $settings = array_column(BusinessSetting::whereIn('key',['loyalty_point_status','loyalty_point_exchange_rate','loyalty_point_item_purchase_point'])->get()->toArray(), 'value','key');
-        if($settings['loyalty_point_status'] != 1)
+        if(($settings['loyalty_point_status'] ?? 0) != 1)
         {
             return true;
         }
@@ -90,7 +91,7 @@ class CustomerLogic{
 
         if($transaction_type=='order_place')
         {
-            $credit = (int)($amount * $settings['loyalty_point_item_purchase_point']/100);
+            $credit = (int)($amount * ($settings['loyalty_point_item_purchase_point'] ?? 0) / 100);
         }
         else if($transaction_type=='point_to_wallet')
         {
@@ -129,7 +130,7 @@ class CustomerLogic{
 
         $debit = 0.0;
         $credit = 0.0;
-        $amount = BusinessSetting::where('key','ref_earning_exchange_rate')->first()->value?? 0;
+        $amount = BusinessSetting::where('key','ref_earning_exchange_rate')->first()?->value ?? 0;
         $credit = $amount;
 
         $wallet_transaction = new WalletTransaction();

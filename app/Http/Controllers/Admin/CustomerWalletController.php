@@ -30,7 +30,7 @@ class CustomerWalletController extends Controller
      */
     public function add_fund_view(): Renderable|RedirectResponse
     {
-        if (BusinessSetting::where('key', 'wallet_status')->first()->value != 1) {
+        if ((BusinessSetting::where('key', 'wallet_status')->first()?->value ?? 0) != 1) {
             Toastr::error(translate('customer_wallet_status_is_disable'));
             return back();
         }

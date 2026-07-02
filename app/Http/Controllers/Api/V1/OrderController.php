@@ -281,7 +281,7 @@ if (in_array($request->payment_method, ['stripe', 'online_payment'])) {
             $or['total_tax_amount'] = $total_tax_amount ?? $request['total_tax_amount'];
             // $or['total_tax_amount'] = $request['total_tax_amount'] ?? 0.00;
             
-            $overall_tax = BusinessSetting::where('key', 'overall_tax')->first()->value;
+            $overall_tax = BusinessSetting::where('key', 'overall_tax')->first()?->value ?? 0;
             $or['overall_tax'] = $overall_tax ? $overall_tax : 0;
             $or['order_amount'] = $or['order_amount'] + $overall_tax;
 

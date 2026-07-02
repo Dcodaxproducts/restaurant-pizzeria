@@ -43,7 +43,7 @@ class CustomerAuthController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
-        if ($this->business_setting->where(['key' => 'phone_verification'])->first()->value) {
+        if ($this->business_setting->where(['key' => 'phone_verification'])->first()?->value) {
             $otp_interval_time= Helpers::get_business_settings('otp_resend_time') ?? 60;// seconds
             $otp_verification_data= DB::table('phone_verifications')->where('phone', $request['phone'])->first();
 
@@ -200,7 +200,7 @@ class CustomerAuthController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
-        if ($this->business_setting->where(['key' => 'email_verification'])->first()->value) {
+        if ($this->business_setting->where(['key' => 'email_verification'])->first()?->value) {
 
             $otp_interval_time= Helpers::get_business_settings('otp_resend_time') ?? 60;// seconds
             $otp_verification_data= DB::table('email_verifications')->where('email', $request['email'])->first();

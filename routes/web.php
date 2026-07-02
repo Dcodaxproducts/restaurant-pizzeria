@@ -15,8 +15,14 @@ use Illuminate\Support\Facades\Route;
  * Public Landing
  */
 Route::get('/', function () {
+    return redirect()->route('admin.auth.login');
+});
+
+/*
+Route::get('/', function () {
     return view('landing.index');
 })->name('landing');
+*/
 
 /**
  * Pages

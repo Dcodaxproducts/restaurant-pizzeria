@@ -18,7 +18,7 @@ class InternalPointPayController extends Controller
         $callback = $request['callback'];
 
         $user = User::find($request['customer_id']);
-        $value = BusinessSetting::where(['key' => 'point_per_currency'])->first()->value;
+        $value = BusinessSetting::where(['key' => 'point_per_currency'])->first()?->value ?? 0;
         $order_point = $request['order_amount'] * $value;
         $tr_ref = 'payment_' . Str::random('15');
 

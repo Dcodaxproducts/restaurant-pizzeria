@@ -489,7 +489,7 @@ class OrderController extends Controller
             $referred_by_user = $this->user->find($user->refer_by);
 
             if ($is_first_order < 2 && isset($user->refer_by) && isset($referred_by_user)) {
-                if ($this->business_setting->where('key', 'ref_earning_status')->first()->value == 1) {
+                if (($this->business_setting->where('key', 'ref_earning_status')->first()?->value ?? 0) == 1) {
                     CustomerLogic::referral_earning_wallet_transaction($order->user_id, 'referral_order_place', $referred_by_user->id);
                 }
             }

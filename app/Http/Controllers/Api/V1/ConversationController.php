@@ -90,7 +90,7 @@ class ConversationController extends Controller
                 'title' => $request->user()->f_name . ' ' . $request->user()->l_name . translate(' send a message'),
                 'description' => $request->user()->id,
                 'order_id' => '',
-                'image' => asset('/storage/restaurant') . '/' . $this->business_setting->where(['key' => 'logo'])->first()->value,
+                'image' => asset('/storage/restaurant') . '/' . ($this->business_setting->where(['key' => 'logo'])->first()?->value ?? ''),
                 'type' => 'order_status',
             ];
 

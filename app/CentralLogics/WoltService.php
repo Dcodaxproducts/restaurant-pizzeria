@@ -17,17 +17,23 @@ class WoltService
     {
         
         $this->client = $client;
-        $config = self::get_settings('wolt_service');
-        $this->venueId = $config['venue_id'];
-        $this->merchantId = $config['merchant_id'];
-        $this->token = $config['token'];
-        $this->status = $config['status'];
-        $this->baseUrl = $config['environment'] == 'live' ? 'https://daas-public-api.wolt.com' : 'https://daas-public-api.development.dev.woltapi.com';
+        $config = self::get_settings('wolt_service') ?: [];
+        $this->venueId = $config['venue_id'] ?? null;
+        $this->merchantId = $config['merchant_id'] ?? null;
+        $this->token = $config['token'] ?? null;
+        $this->status = (int)($config['status'] ?? 0);
+        $this->baseUrl = ($config['environment'] ?? 'sandbox') == 'live'
+            ? 'https://daas-public-api.wolt.com'
+            : 'https://daas-public-api.development.dev.woltapi.com';
     }
 	
 
-	public function getShipmentPromises(array $data)
+    public function getShipmentPromises(array $data)
 	{
+        if ($this->status != 1 || !$this->venueId || !$this->token) {
+            return ['error' => 'Wolt service is not configured'];
+        }
+
 		try {
 			$response = $this->client->post("{$this->baseUrl}/v1/venues/{$this->venueId}/shipment-promises", [
 				'headers' => [
@@ -56,7 +62,7 @@ class WoltService
 
     public function createDelivery($order)
     {
-        if($this->status != 1){
+        if($this->status != 1 || !$this->venueId || !$this->token){
            return true; 
         }
         try {
@@ -131,6 +137,10 @@ class WoltService
     
     public function getExistingWebhooks()
     {
+        if ($this->status != 1 || !$this->merchantId || !$this->token) {
+            return [];
+        }
+
         try {
             $response = $this->client->get("{$this->baseUrl}/v1/merchants/{$this->merchantId}/webhooks", [
                 'headers' => [
@@ -149,6 +159,10 @@ class WoltService
     
     public function registerWoltWebhook()
     {
+        if ($this->status != 1 || !$this->merchantId || !$this->token) {
+            return false;
+        }
+
         $webhooks = $this->getExistingWebhooks();
         
         if ($webhooks) {

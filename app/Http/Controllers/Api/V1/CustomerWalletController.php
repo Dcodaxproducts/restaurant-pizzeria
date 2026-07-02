@@ -44,12 +44,15 @@ class CustomerWalletController extends Controller
         }
 
         //minimum point check (for transferring)
-        $min_point = $this->business_setting->where(['key' => 'loyalty_point_minimum_point'])->first()->value;
+        $min_point = $this->business_setting->where(['key' => 'loyalty_point_minimum_point'])->first()?->value ?? 0;
         if ($request['point'] < $min_point) {
             return response()->json(['errors' => [['code' => 'wallet', 'message' => translate('Your point in not sufficient!')]]], 401);
         }
 
-        $loyalty_point_exchange_rate = $this->business_setting->where(['key' => 'loyalty_point_exchange_rate'])->first()->value;
+        $loyalty_point_exchange_rate = $this->business_setting->where(['key' => 'loyalty_point_exchange_rate'])->first()?->value ?? 0;
+        if ($loyalty_point_exchange_rate <= 0) {
+            return response()->json(['errors' => [['code' => 'wallet', 'message' => translate('Loyalty point exchange rate is not configured!')]]], 400);
+        }
         $loyalty_amount = $request['point'] / $loyalty_point_exchange_rate;
 
         //point transfer transaction

@@ -30,7 +30,7 @@
                                 <a class="rounded-circle"
                                 href="{{route('branch.dashboard')}}">
 
-                                    <img src="{{asset('assets/admin/img/logo1.png')}}" alt="">
+                                    <img style="width: 106px;" src="{{asset('assets/admin/img/logo1.png')}}" alt="">
                                 </a>
                         </li>
                     @if (Request::is('branch'))

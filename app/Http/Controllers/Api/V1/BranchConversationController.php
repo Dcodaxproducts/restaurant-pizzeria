@@ -90,7 +90,7 @@ class BranchConversationController extends Controller
                 'title' => $branch->name . ' ' . translate('sent a message'),
                 'description' => $branch->id,
                 'order_id' => '',
-                'image' => asset('/storage/restaurant') . '/' . $this->business_setting->where('key', 'logo')->first()->value,
+                'image' => asset('/storage/restaurant') . '/' . ($this->business_setting->where('key', 'logo')->first()?->value ?? ''),
                 'type' => 'order_status',
             ];
 

@@ -546,7 +546,7 @@ class POSController extends Controller
             $order->extra_discount = $extra_discount ?? 0;
             $order->total_tax_amount = $total_tax_amount;
 
-            $overall_tax = BusinessSetting::where('key', 'overall_tax')->first()->value;
+            $overall_tax = BusinessSetting::where('key', 'overall_tax')->first()?->value ?? 0;
 
             $order->order_amount = $total_price + $total_tax_amount + $order->delivery_charge+$total_addon_tax + $overall_tax;
 

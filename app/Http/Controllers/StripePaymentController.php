@@ -28,7 +28,7 @@ class StripePaymentController extends Controller
         $order_amount = (float)$request['order_amount'];
         $callback = $request['callback'];
         $config = Helpers::get_business_settings('stripe');
-        Stripe::setApiKey($config['api_key']);
+        Stripe::setApiKey($config['api_key'] ?? '');
         header('Content-Type: application/json');
         $currency_code = Helpers::get_business_settings('currency') ?? 'usd';
         $currency_code = strtoupper($currency_code);
@@ -45,8 +45,8 @@ class StripePaymentController extends Controller
                     'currency' => $currency_code,
                     'unit_amount' => $unit_amount,
                     'product_data' => [
-                        'name' => BusinessSetting::where(['key' => 'restaurant_name'])->first()->value,
-                        'images' => [asset('/storage/restaurant') . '/' . BusinessSetting::where(['key' => 'logo'])->first()->value],
+                        'name' => BusinessSetting::where(['key' => 'restaurant_name'])->first()?->value ?? 'Restaurant',
+                        'images' => [asset('/storage/restaurant') . '/' . (BusinessSetting::where(['key' => 'logo'])->first()?->value ?? '')],
                     ],
                 ],
                 'quantity' => 1,

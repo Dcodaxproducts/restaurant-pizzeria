@@ -125,7 +125,7 @@ class SystemController extends Controller
 
         try {
             if ($response_body['is_valid'] && $response_body['result']['item']['id'] == $app_id) {
-                $previous_active = json_decode($this->business_setting->where('key', 'app_activation')->first()->value ?? '[]');
+                $previous_active = json_decode($this->business_setting->where('key', 'app_activation')->first()?->value ?? '[]');
                 $found = 0;
                 foreach ($previous_active as $key => $item) {
                     if ($item->software_id == $app_id) {

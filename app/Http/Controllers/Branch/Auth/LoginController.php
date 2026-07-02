@@ -68,11 +68,11 @@ class LoginController extends Controller
 
         //recaptcha validation
         $recaptcha = Helpers::get_business_settings('recaptcha');
-        if (isset($recaptcha) && $recaptcha['status'] == 1) {
+        if (isset($recaptcha) && ($recaptcha['status'] ?? 0) == 1) {
             $request->validate([
                 'g-recaptcha-response' => [
                     function ($attribute, $value, $fail) {
-                        $secret_key = Helpers::get_business_settings('recaptcha')['secret_key'];
+                        $secret_key = (Helpers::get_business_settings('recaptcha') ?: [])['secret_key'] ?? '';
                         $response = $value;
                         $url = 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $response;
                         $response = \file_get_contents($url);

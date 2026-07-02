@@ -76,7 +76,7 @@ class OrderLogic
     {
         try{
 
-            $overall_tax = BusinessSetting::where('key', 'overall_tax')->first()->value;
+            $overall_tax = BusinessSetting::where('key', 'overall_tax')->first()?->value ?? 0;
 
             $order_transaction = new OrderTransaction;
             $order_transaction->delivery_man_id = $order->delivery_man_id;

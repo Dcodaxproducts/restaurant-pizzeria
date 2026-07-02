@@ -506,7 +506,7 @@ class Helpers
 
     public static function send_push_notif_to_topic($data, $topic, $type)
     {
-        $key = BusinessSetting::where(['key' => 'push_notification_key'])->first()->value;
+        $key = BusinessSetting::where(['key' => 'push_notification_key'])->first()?->value ?? '';
 
         $url = "https://fcm.googleapis.com/fcm/send";
         $header = array(
@@ -1029,13 +1029,13 @@ class Helpers
     {
         $config = self::get_business_settings('delivery_management');
 
-        if ($config['status'] != 1) {
-            $delivery_charge = BusinessSetting::where(['key' => 'delivery_charge'])->first()->value;
+        if (($config['status'] ?? 0) != 1) {
+            $delivery_charge = BusinessSetting::where(['key' => 'delivery_charge'])->first()?->value ?? 0;
             return $delivery_charge;
         } else {
             $delivery_charge = 0;
-            $min_shipping_charge = $config['min_shipping_charge'];
-            $shipping_per_km = $config['shipping_per_km'];
+            $min_shipping_charge = $config['min_shipping_charge'] ?? 0;
+            $shipping_per_km = $config['shipping_per_km'] ?? 0;
 
             $delivery_charge = $shipping_per_km * $distance;
 

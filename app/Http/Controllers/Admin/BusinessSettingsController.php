@@ -1488,17 +1488,19 @@ class BusinessSettingsController extends Controller
     public function update_delivery_fee(Request $request): RedirectResponse
     {
         if ($request->delivery_charge == null) {
-            $request->delivery_charge = $this->business_setting->where(['key' => 'delivery_charge'])->first()->value;
+            $request->delivery_charge = $this->business_setting->where(['key' => 'delivery_charge'])->first()?->value ?? 0;
         }
         $this->business_setting->updateOrInsert(['key' => 'delivery_charge'], [
             'value' => $request->delivery_charge,
         ]);
 
         if ($request['min_shipping_charge'] == null) {
-            $request['min_shipping_charge'] = Helpers::get_business_settings('delivery_management')['min_shipping_charge'];
+            $deliveryManagement = Helpers::get_business_settings('delivery_management') ?: [];
+            $request['min_shipping_charge'] = $deliveryManagement['min_shipping_charge'] ?? 0;
         }
         if ($request['shipping_per_km'] == null) {
-            $request['shipping_per_km'] = Helpers::get_business_settings('delivery_management')['shipping_per_km'];
+            $deliveryManagement = $deliveryManagement ?? (Helpers::get_business_settings('delivery_management') ?: []);
+            $request['shipping_per_km'] = $deliveryManagement['shipping_per_km'] ?? 0;
         }
         if ($request['shipping_status'] == 1) {
             $request->validate([
