@@ -24,10 +24,7 @@ class LoginController extends Controller
         $this->admin = $admin;
     }
 
-    /**
-     * @param $tmp
-     * @return void
-     */
+   
     public function captcha($tmp)
     {
 
@@ -50,9 +47,7 @@ class LoginController extends Controller
         $builder->output();
     }
 
-    /**
-     * @return Renderable
-     */
+ 
     public function login(): Renderable
     {
         $restaurantLogo = BusinessSetting::where('key', 'logo')->value('value');
@@ -61,10 +56,7 @@ class LoginController extends Controller
         return view('admin-views.auth.login', compact('restaurantLogo', 'recaptcha'));
     }
 
-    /**
-     * @param Request $request
-     * @return RedirectResponse
-     */
+  
     public function submit(Request $request): RedirectResponse
     {
         $request->validate([
@@ -99,7 +91,7 @@ class LoginController extends Controller
         if (Session::has('default_captcha_code')) {
             Session::forget('default_captcha_code');
         }
-        
+
         //end recaptcha validation
 
         $admin = $this->admin->where('email', $request->email)->first();
