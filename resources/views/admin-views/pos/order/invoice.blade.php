@@ -1,7 +1,7 @@
 <div style="width:370px;margin-left:18px" id="printableAreaContent">
     <div class="row m-0">
         <div class="col-6">
-            <img src="{{ asset('assets/admin/img/Fflow_print-logo.png') }}" alt="Logo">
+            <img src="{{ asset('assets/admin/img/logo1.png') }}" alt="Logo" style="height: 91px;">
         </div>
         <div class="col-6">
             <h5 style="font-weight: lighter">
